@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Coconut Disease Detector</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            text-align: center;
+            padding: 40px;
+        }
+        .box {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            width: 400px;
+            margin: auto;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        input {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="box">
+    <h2>Coconut Disease Prediction</h2>
+
+    <form id="uploadForm" enctype="multipart/form-data">
+        <input type="file" name="image" id="image" required><br><br>
+        <button type="submit">Predict</button>
+    </form>
+
+    <h3 id="result"></h3>
+</div>
+
+<script>
+document.querySelector("#uploadForm").onsubmit = async (e) => {
+    e.preventDefault();
+
+    let file = document.querySelector("#image").files[0];
+    let formData = new FormData();
+    formData.append("image", file);
+
+    let res = await fetch("/predict", {
+        method: "POST",
+        body: formData
+    });
+
+    let data = await res.json();
+
+    document.querySelector("#result").innerHTML =
+        `<b>Disease:</b> ${data.prediction}<br>
+         <b>Confidence:</b> ${data.confidence}`;
+};
+</script>
+
+</body>
+</html>
